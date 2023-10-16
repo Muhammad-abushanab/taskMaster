@@ -2,32 +2,23 @@ package com.shanab.taskmaster;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class Add_A_Task extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        Button addTaskBtn = (Button) findViewById(R.id.addTask);
-        Intent navigateToAddTaskPage = new Intent(this, Add_A_Task.class);
-        addTaskBtn.setOnClickListener(new View.OnClickListener() {
+        setContentView(R.layout.activity_add_atask);
+        Button addTaskActivityBtn = (Button) findViewById(R.id.AddTaskBtn);
+        Toast toast = Toast.makeText(this , "Task Added Successfully", Toast.LENGTH_SHORT);
+        addTaskActivityBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(navigateToAddTaskPage);
-            }
-        });
-        Button allTasksBtn = (Button) findViewById(R.id.allTasks);
-        Intent navigateToAllTaskActivity = new Intent(this, All_Tasks.class);
-        allTasksBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(navigateToAllTaskActivity);
+                toast.show();
             }
         });
     }

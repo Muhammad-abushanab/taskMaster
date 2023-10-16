@@ -13,6 +13,12 @@
         android:theme="@style/Theme.Taskmaster"
         tools:targetApi="31">
         <activity
+            android:name=".All_Tasks"
+            android:exported="false" />
+        <activity
+            android:name=".Add_A_Task"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
