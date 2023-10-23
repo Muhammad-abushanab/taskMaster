@@ -11,6 +11,7 @@ import com.shanab.taskmaster.R;
 import java.util.Objects;
 
 public class TaskDetails extends AppCompatActivity {
+    public static final String TASK_NAME_TAG = "Task Title";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -2,24 +2,34 @@ package com.shanab.taskmaster.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.shanab.taskmaster.Activity.Adapters.TaskAdapter;
+import com.shanab.taskmaster.Activity.Models.TaskModel;
+import com.shanab.taskmaster.Activity.States.TaskState;
 import com.shanab.taskmaster.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setUpTaskRecyclerView();
         Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
         Button addTaskBtn = (Button) findViewById(R.id.addTask);
@@ -43,33 +53,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(navigateToSettingsActivity);
-            }
-        });
-
-        Button task1btn = findViewById(R.id.task1Btn);
-        String task1Title = task1btn.getText().toString();
-        task1btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openTaskDetail(task1Title);
-            }
-        });
-
-        Button task2btn = findViewById(R.id.task2Btn);
-        String task2Title = task2btn.getText().toString();
-        task2btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openTaskDetail(task2Title);
-            }
-        });
-
-        Button task3btn = findViewById(R.id.task3Btn);
-        String task3Title = task3btn.getText().toString();
-        task3btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openTaskDetail(task3Title);
             }
         });
     }
@@ -115,5 +98,20 @@ public class MainActivity extends AppCompatActivity {
         Intent navigate_To_TaskDetails_Activity = new Intent(this, TaskDetails.class);
         navigate_To_TaskDetails_Activity.putExtra("TaskTitle",taskTitle);
         startActivity(navigate_To_TaskDetails_Activity);
+    }
+    private void setUpTaskRecyclerView(){
+        Log.d("MainActivity", "setUpTaskRecyclerView is being called");
+        RecyclerView taskListRecyclerView = (RecyclerView) findViewById(R.id.TaskRecView);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        taskListRecyclerView.setLayoutManager(layoutManager);
+
+        List<TaskModel> tasks = new ArrayList<>();
+        tasks.add(new TaskModel("Shopping","I Am going for shopping at 3 am", TaskState.NEW));
+        tasks.add(new TaskModel("Work","Some missing files", TaskState.ASSIGNED));
+        tasks.add(new TaskModel("Having Fun","Meet with my friends at 8 pm", TaskState.IN_PROGRESS));
+        tasks.add(new TaskModel("Time to rest","Take a nap for 20 minutes", TaskState.COMPLETED));
+
+        TaskAdapter adapter = new TaskAdapter(tasks,this);
+        taskListRecyclerView.setAdapter(adapter);
     }
 }
