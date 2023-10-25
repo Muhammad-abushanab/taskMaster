@@ -31,7 +31,7 @@
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         android:text="TextView"
-        android:textColor="@color/secondary"
+        android:textColor="@color/red"
         android:textSize="14sp" />
 
 </LinearLayout>
