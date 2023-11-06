@@ -49,7 +49,7 @@ public class Add_A_Task extends AppCompatActivity {
             public void onClick(View view) {
                 TaskModel task = new TaskModel(
                         ((EditText) findViewById(R.id.tasktitle)).getText().toString(),
-                        ((EditText) findViewById(R.id.editTextTextMultiLine)).getText().toString(),
+                        ((EditText) findViewById(R.id.taskDescription)).getText().toString(),
                         TaskState.fromString(taskStateSpinner.getSelectedItem().toString()));
                 taskDatabase.taskDao().insertTask(task);
                 toast.show();
