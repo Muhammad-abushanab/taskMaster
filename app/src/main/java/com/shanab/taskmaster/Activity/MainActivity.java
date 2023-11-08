@@ -16,8 +16,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.amplifyframework.api.graphql.model.ModelQuery;
+import com.amplifyframework.core.Amplify;
+import com.amplifyframework.datastore.generated.model.TaskModel;
 import com.shanab.taskmaster.Activity.Adapters.TaskAdapter;
-import com.shanab.taskmaster.Activity.Models.TaskModel;
 import com.shanab.taskmaster.Activity.States.TaskState;
 import com.shanab.taskmaster.Activity.database.TaskDatabase;
 import com.shanab.taskmaster.R;
@@ -27,6 +29,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public static final String DATABASE_NAME = "Tasks";
+    TaskAdapter adapter;
     TaskDatabase taskDatabase;
 
     @Override
@@ -88,12 +91,30 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView taskListRecyclerView = (RecyclerView) findViewById(R.id.TaskRecView);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         taskListRecyclerView.setLayoutManager(layoutManager);
-        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, DATABASE_NAME)
-                .fallbackToDestructiveMigration()
-                .allowMainThreadQueries().build();
-        List<TaskModel> tasks = taskDatabase.taskDao().findAll();
+//        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, DATABASE_NAME)
+//                .fallbackToDestructiveMigration()
+//                .allowMainThreadQueries().build();
+//        List<TaskModel> tasks = taskDatabase.taskDao().findAll();
 
-        TaskAdapter adapter = new TaskAdapter(tasks, this);
+        List<TaskModel> tasks = new ArrayList<>();
+
+        Amplify.API.query(
+                ModelQuery.list(TaskModel.class),
+                success ->
+                {
+                    Log.i("Crazy", "Read Product successfully");
+                    tasks.clear();
+                    for (TaskModel databaseTask : success.getData()){
+                        tasks.add(databaseTask);
+                    }
+                    runOnUiThread(() ->{
+                        adapter.notifyDataSetChanged();
+                    });
+                },
+                failure -> Log.i("Crazy", "Did not read products successfully")
+        );
+
+        adapter = new TaskAdapter(tasks, this);
         taskListRecyclerView.setAdapter(adapter);
     }
 
