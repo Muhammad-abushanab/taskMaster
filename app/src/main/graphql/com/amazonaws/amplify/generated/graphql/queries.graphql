@@ -1,0 +1,69 @@
+# this is an auto generated file. This will be overwritten
+
+query GetTask($id: ID!) {
+  getTask(id: $id) {
+    id
+    title
+    description
+    dateCreated
+    state
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+query ListTasks(
+  $filter: ModelTaskFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listTasks(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      title
+      description
+      dateCreated
+      state
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+
+query GetTaskModel($id: ID!) {
+  getTaskModel(id: $id) {
+    id
+    title
+    description
+    dateCreated
+    state
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+query ListTaskModels(
+  $filter: ModelTaskModelFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listTaskModels(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      title
+      description
+      dateCreated
+      state
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}

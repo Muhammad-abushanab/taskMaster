@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.shanab.taskmaster.Activity.Models.TaskModel;
+import com.amplifyframework.datastore.generated.model.TaskModel;
 import com.shanab.taskmaster.Activity.TaskDetails;
 import com.shanab.taskmaster.R;
 
@@ -45,7 +45,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskListViewHo
         View listViewHolder = holder.itemView;
         listViewHolder.setOnClickListener(view -> {
             Intent goToTaskFormIntent = new Intent(callingActivity, TaskDetails.class);
-            goToTaskFormIntent.putExtra("TaskTitle", tasks.get(position).getTitle());
+            goToTaskFormIntent.putExtra("TaskId", tasks.get(position).getId());
             callingActivity.startActivity(goToTaskFormIntent);
         });
     }
