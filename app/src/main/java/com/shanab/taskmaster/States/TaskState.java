@@ -1,4 +1,4 @@
-package com.shanab.taskmaster.Activity.States;
+package com.shanab.taskmaster.States;
 
 import androidx.annotation.NonNull;
 

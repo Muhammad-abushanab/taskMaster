@@ -1,4 +1,4 @@
-package com.shanab.taskmaster.Activity.Fragments;
+package com.shanab.taskmaster.Fragments;
 
 import android.os.Bundle;
 

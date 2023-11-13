@@ -78,8 +78,20 @@
         android:padding="20dp"
         app:layout_constraintBottom_toTopOf="@+id/addTask"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.448"
+        app:layout_constraintHorizontal_bias="0.965"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/homeHeader" />
+        app:layout_constraintTop_toBottomOf="@+id/homeHeader"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/teamNameInMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="TeamName"
+        app:layout_constraintBottom_toTopOf="@+id/homeHeader"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.13"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

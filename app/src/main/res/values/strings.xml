@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">taskmaster</string>
     <string name="nick_name">%1$s</string>
+    <string name="team_name">%1$s</string>
     <string name="user_nick_name">User name</string>
     <string name="save">Save</string>
     <string name="settings">Settings</string>

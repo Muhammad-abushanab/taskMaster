@@ -2,7 +2,6 @@ package com.shanab.taskmaster.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.room.Room;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +14,7 @@ import com.amplifyframework.api.graphql.model.ModelMutation;
 import com.amplifyframework.api.graphql.model.ModelQuery;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.generated.model.TaskModel;
-import com.shanab.taskmaster.Activity.database.TaskDatabase;
+import com.shanab.taskmaster.database.TaskDatabase;
 import com.shanab.taskmaster.R;
 
 import java.util.Objects;

@@ -1,6 +1,7 @@
 package com.amplifyframework.datastore.generated.model;
 
 import com.amplifyframework.core.model.temporal.Temporal;
+import com.amplifyframework.core.model.annotations.HasMany;
 import java.util.List;
 import java.util.UUID;
 import java.util.Objects;
@@ -18,22 +19,19 @@ import com.amplifyframework.core.model.query.predicate.QueryField;
 
 import static com.amplifyframework.core.model.query.predicate.QueryField.field;
 
-/** This is an auto generated class representing the Task type in your schema. */
+/** This is an auto generated class representing the Team type in your schema. */
 @SuppressWarnings("all")
-@ModelConfig(pluralName = "Tasks", authRules = {
+@ModelConfig(pluralName = "Teams",  authRules = {
   @AuthRule(allow = AuthStrategy.PUBLIC, operations = { ModelOperation.CREATE, ModelOperation.UPDATE, ModelOperation.DELETE, ModelOperation.READ })
 })
-public final class Task implements Model {
-  public static final QueryField ID = field("Task", "id");
-  public static final QueryField TITLE = field("Task", "title");
-  public static final QueryField DESCRIPTION = field("Task", "description");
-  public static final QueryField DATE_CREATED = field("Task", "dateCreated");
-  public static final QueryField STATE = field("Task", "state");
+public final class Team implements Model {
+  public static final QueryField ID = field("Team", "id");
+  public static final QueryField NAME = field("Team", "name");
+  public static final QueryField DATE_CREATED = field("Team", "dateCreated");
   private final @ModelField(targetType="ID", isRequired = true) String id;
-  private final @ModelField(targetType="String", isRequired = true) String title;
-  private final @ModelField(targetType="String") String description;
+  private final @ModelField(targetType="String", isRequired = true) String name;
   private final @ModelField(targetType="AWSDateTime") Temporal.DateTime dateCreated;
-  private final @ModelField(targetType="taskState") TaskState state;
+  private final @ModelField(targetType="TaskModel") @HasMany(associatedWith = "team", type = TaskModel.class) List<TaskModel> tasks = null;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime createdAt;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime updatedAt;
   /** @deprecated This API is internal to Amplify and should not be used. */
@@ -46,20 +44,16 @@ public final class Task implements Model {
       return id;
   }
   
-  public String getTitle() {
-      return title;
-  }
-  
-  public String getDescription() {
-      return description;
+  public String getName() {
+      return name;
   }
   
   public Temporal.DateTime getDateCreated() {
       return dateCreated;
   }
   
-  public TaskState getState() {
-      return state;
+  public List<TaskModel> getTasks() {
+      return tasks;
   }
   
   public Temporal.DateTime getCreatedAt() {
@@ -70,12 +64,10 @@ public final class Task implements Model {
       return updatedAt;
   }
   
-  private Task(String id, String title, String description, Temporal.DateTime dateCreated, TaskState state) {
+  private Team(String id, String name, Temporal.DateTime dateCreated) {
     this.id = id;
-    this.title = title;
-    this.description = description;
+    this.name = name;
     this.dateCreated = dateCreated;
-    this.state = state;
   }
   
   @Override
@@ -85,14 +77,12 @@ public final class Task implements Model {
       } else if(obj == null || getClass() != obj.getClass()) {
         return false;
       } else {
-      Task task = (Task) obj;
-      return ObjectsCompat.equals(getId(), task.getId()) &&
-              ObjectsCompat.equals(getTitle(), task.getTitle()) &&
-              ObjectsCompat.equals(getDescription(), task.getDescription()) &&
-              ObjectsCompat.equals(getDateCreated(), task.getDateCreated()) &&
-              ObjectsCompat.equals(getState(), task.getState()) &&
-              ObjectsCompat.equals(getCreatedAt(), task.getCreatedAt()) &&
-              ObjectsCompat.equals(getUpdatedAt(), task.getUpdatedAt());
+      Team team = (Team) obj;
+      return ObjectsCompat.equals(getId(), team.getId()) &&
+              ObjectsCompat.equals(getName(), team.getName()) &&
+              ObjectsCompat.equals(getDateCreated(), team.getDateCreated()) &&
+              ObjectsCompat.equals(getCreatedAt(), team.getCreatedAt()) &&
+              ObjectsCompat.equals(getUpdatedAt(), team.getUpdatedAt());
       }
   }
   
@@ -100,10 +90,8 @@ public final class Task implements Model {
    public int hashCode() {
     return new StringBuilder()
       .append(getId())
-      .append(getTitle())
-      .append(getDescription())
+      .append(getName())
       .append(getDateCreated())
-      .append(getState())
       .append(getCreatedAt())
       .append(getUpdatedAt())
       .toString()
@@ -113,19 +101,17 @@ public final class Task implements Model {
   @Override
    public String toString() {
     return new StringBuilder()
-      .append("Task {")
+      .append("Team {")
       .append("id=" + String.valueOf(getId()) + ", ")
-      .append("title=" + String.valueOf(getTitle()) + ", ")
-      .append("description=" + String.valueOf(getDescription()) + ", ")
+      .append("name=" + String.valueOf(getName()) + ", ")
       .append("dateCreated=" + String.valueOf(getDateCreated()) + ", ")
-      .append("state=" + String.valueOf(getState()) + ", ")
       .append("createdAt=" + String.valueOf(getCreatedAt()) + ", ")
       .append("updatedAt=" + String.valueOf(getUpdatedAt()))
       .append("}")
       .toString();
   }
   
-  public static TitleStep builder() {
+  public static NameStep builder() {
       return new Builder();
   }
   
@@ -137,11 +123,9 @@ public final class Task implements Model {
    * @param id the id of the existing item this instance will represent
    * @return an instance of this model with only ID populated
    */
-  public static Task justId(String id) {
-    return new Task(
+  public static Team justId(String id) {
+    return new Team(
       id,
-      null,
-      null,
       null,
       null
     );
@@ -149,77 +133,55 @@ public final class Task implements Model {
   
   public CopyOfBuilder copyOfBuilder() {
     return new CopyOfBuilder(id,
-      title,
-      description,
-      dateCreated,
-      state);
+      name,
+      dateCreated);
   }
-  public interface TitleStep {
-    BuildStep title(String title);
+  public interface NameStep {
+    BuildStep name(String name);
   }
   
 
   public interface BuildStep {
-    Task build();
+    Team build();
     BuildStep id(String id);
-    BuildStep description(String description);
     BuildStep dateCreated(Temporal.DateTime dateCreated);
-    BuildStep state(TaskState state);
   }
   
 
-  public static class Builder implements TitleStep, BuildStep {
+  public static class Builder implements NameStep, BuildStep {
     private String id;
-    private String title;
-    private String description;
+    private String name;
     private Temporal.DateTime dateCreated;
-    private TaskState state;
     public Builder() {
       
     }
     
-    private Builder(String id, String title, String description, Temporal.DateTime dateCreated, TaskState state) {
+    private Builder(String id, String name, Temporal.DateTime dateCreated) {
       this.id = id;
-      this.title = title;
-      this.description = description;
+      this.name = name;
       this.dateCreated = dateCreated;
-      this.state = state;
     }
     
     @Override
-     public Task build() {
+     public Team build() {
         String id = this.id != null ? this.id : UUID.randomUUID().toString();
         
-        return new Task(
+        return new Team(
           id,
-          title,
-          description,
-          dateCreated,
-          state);
+          name,
+          dateCreated);
     }
     
     @Override
-     public BuildStep title(String title) {
-        Objects.requireNonNull(title);
-        this.title = title;
-        return this;
-    }
-    
-    @Override
-     public BuildStep description(String description) {
-        this.description = description;
+     public BuildStep name(String name) {
+        Objects.requireNonNull(name);
+        this.name = name;
         return this;
     }
     
     @Override
      public BuildStep dateCreated(Temporal.DateTime dateCreated) {
         this.dateCreated = dateCreated;
-        return this;
-    }
-    
-    @Override
-     public BuildStep state(TaskState state) {
-        this.state = state;
         return this;
     }
     
@@ -235,32 +197,23 @@ public final class Task implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, String title, String description, Temporal.DateTime dateCreated, TaskState state) {
-      super(id, title, description, dateCreated, state);
-      Objects.requireNonNull(title);
+    private CopyOfBuilder(String id, String name, Temporal.DateTime dateCreated) {
+      super(id, name, dateCreated);
+      Objects.requireNonNull(name);
     }
     
     @Override
-     public CopyOfBuilder title(String title) {
-      return (CopyOfBuilder) super.title(title);
-    }
-    
-    @Override
-     public CopyOfBuilder description(String description) {
-      return (CopyOfBuilder) super.description(description);
+     public CopyOfBuilder name(String name) {
+      return (CopyOfBuilder) super.name(name);
     }
     
     @Override
      public CopyOfBuilder dateCreated(Temporal.DateTime dateCreated) {
       return (CopyOfBuilder) super.dateCreated(dateCreated);
     }
-    
-    @Override
-     public CopyOfBuilder state(TaskState state) {
-      return (CopyOfBuilder) super.state(state);
-    }
   }
   
+
 
   
 }

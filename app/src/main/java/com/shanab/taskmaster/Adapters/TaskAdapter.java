@@ -1,4 +1,4 @@
-package com.shanab.taskmaster.Activity.Adapters;
+package com.shanab.taskmaster.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -38,10 +38,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskListViewHo
     public void onBindViewHolder(@NonNull TaskListViewHolder holder, int position) {
         TextView taskFragmentTextView = (TextView) holder.itemView.findViewById(R.id.listFragmentTextView);
         TextView taskStateFragment_TextView = (TextView) holder.itemView.findViewById(R.id.taskStateFragment);
+        TextView taskTeamName_TextView = (TextView) holder.itemView.findViewById(R.id.teamNameFragment);
         String taskTitle = tasks.get(position).getTitle();
         String taskState = tasks.get(position).getState().toString();
+        String taskTeamName = tasks.get(position).getTeam().getName();
         taskFragmentTextView.setText(position  + ". " + taskTitle);
         taskStateFragment_TextView.setText(taskState);
+        taskTeamName_TextView.setText(taskTeamName);
         View listViewHolder = holder.itemView;
         listViewHolder.setOnClickListener(view -> {
             Intent goToTaskFormIntent = new Intent(callingActivity, TaskDetails.class);

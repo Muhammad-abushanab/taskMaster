@@ -1,44 +1,5 @@
 # this is an auto generated file. This will be overwritten
 
-subscription OnCreateTask($filter: ModelSubscriptionTaskFilterInput) {
-  onCreateTask(filter: $filter) {
-    id
-    title
-    description
-    dateCreated
-    state
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-
-subscription OnUpdateTask($filter: ModelSubscriptionTaskFilterInput) {
-  onUpdateTask(filter: $filter) {
-    id
-    title
-    description
-    dateCreated
-    state
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-
-subscription OnDeleteTask($filter: ModelSubscriptionTaskFilterInput) {
-  onDeleteTask(filter: $filter) {
-    id
-    title
-    description
-    dateCreated
-    state
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-
 subscription OnCreateTaskModel($filter: ModelSubscriptionTaskModelFilterInput) {
   onCreateTaskModel(filter: $filter) {
     id
@@ -46,8 +7,18 @@ subscription OnCreateTaskModel($filter: ModelSubscriptionTaskModelFilterInput) {
     description
     dateCreated
     state
+    team {
+      id
+      name
+      dateCreated
+      createdAt
+      updatedAt
+      __typename
+    }
+    teamName
     createdAt
     updatedAt
+    teamTasksId
     __typename
   }
 }
@@ -59,8 +30,18 @@ subscription OnUpdateTaskModel($filter: ModelSubscriptionTaskModelFilterInput) {
     description
     dateCreated
     state
+    team {
+      id
+      name
+      dateCreated
+      createdAt
+      updatedAt
+      __typename
+    }
+    teamName
     createdAt
     updatedAt
+    teamTasksId
     __typename
   }
 }
@@ -72,6 +53,61 @@ subscription OnDeleteTaskModel($filter: ModelSubscriptionTaskModelFilterInput) {
     description
     dateCreated
     state
+    team {
+      id
+      name
+      dateCreated
+      createdAt
+      updatedAt
+      __typename
+    }
+    teamName
+    createdAt
+    updatedAt
+    teamTasksId
+    __typename
+  }
+}
+
+subscription OnCreateTeam($filter: ModelSubscriptionTeamFilterInput) {
+  onCreateTeam(filter: $filter) {
+    id
+    name
+    dateCreated
+    tasks {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+subscription OnUpdateTeam($filter: ModelSubscriptionTeamFilterInput) {
+  onUpdateTeam(filter: $filter) {
+    id
+    name
+    dateCreated
+    tasks {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+subscription OnDeleteTeam($filter: ModelSubscriptionTeamFilterInput) {
+  onDeleteTeam(filter: $filter) {
+    id
+    name
+    dateCreated
+    tasks {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
