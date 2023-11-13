@@ -1,4 +1,4 @@
-package com.shanab.taskmaster.Activity.database;
+package com.shanab.taskmaster.database;
 
 import androidx.room.TypeConverter;
 

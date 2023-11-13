@@ -40,25 +40,29 @@
         app:layout_constraintTop_toBottomOf="@+id/tasktitle"
         android:layout_marginTop="16dp"
         android:autofillHints="" />
+
     <Spinner
         android:id="@+id/TaskStateSpinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="15dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/taskDescription"
-        android:layout_marginTop="16dp"
-        android:layout_margin="15dp"/>
+        app:layout_constraintHorizontal_bias="0.551"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/taskDescription" />
 
     <Button
         android:id="@+id/AddTaskBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Task"
-        app:layout_constraintTop_toBottomOf="@+id/TaskStateSpinner"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/textView4"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TeamSpinner"
+        app:layout_constraintVertical_bias="0.139" />
 
     <TextView
         android:id="@+id/textView4"
@@ -69,5 +73,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="16dp" />
+
+    <Spinner
+        android:id="@+id/TeamSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TaskStateSpinner" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,9 +1,9 @@
-package com.shanab.taskmaster.Activity.Models;
+package com.shanab.taskmaster.Models;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.shanab.taskmaster.Activity.States.TaskState;
+import com.shanab.taskmaster.States.TaskState;
 
 @Entity
 public class TaskModel {

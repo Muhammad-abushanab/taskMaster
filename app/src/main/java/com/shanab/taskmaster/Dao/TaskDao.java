@@ -1,10 +1,10 @@
-package com.shanab.taskmaster.Activity.Dao;
+package com.shanab.taskmaster.Dao;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.shanab.taskmaster.Activity.Models.TaskModel;
+import com.shanab.taskmaster.Models.TaskModel;
 
 import java.util.List;
 

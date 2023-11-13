@@ -1,7 +1,7 @@
 package com.amplifyframework.datastore.generated.model;
 
 import com.amplifyframework.core.model.temporal.Temporal;
-import com.amplifyframework.core.model.ModelIdentifier;
+import com.amplifyframework.core.model.annotations.BelongsTo;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +22,7 @@ import static com.amplifyframework.core.model.query.predicate.QueryField.field;
 
 /** This is an auto generated class representing the TaskModel type in your schema. */
 @SuppressWarnings("all")
-@ModelConfig(pluralName = "TaskModels", type = Model.Type.USER, version = 1, authRules = {
+@ModelConfig(pluralName = "TaskModels", authRules = {
   @AuthRule(allow = AuthStrategy.PUBLIC, operations = { ModelOperation.CREATE, ModelOperation.UPDATE, ModelOperation.DELETE, ModelOperation.READ })
 })
 public final class TaskModel implements Model {
@@ -31,11 +31,15 @@ public final class TaskModel implements Model {
   public static final QueryField DESCRIPTION = field("TaskModel", "description");
   public static final QueryField DATE_CREATED = field("TaskModel", "dateCreated");
   public static final QueryField STATE = field("TaskModel", "state");
+  public static final QueryField TEAM = field("TaskModel", "teamTasksId");
+  public static final QueryField TEAM_NAME = field("TaskModel", "teamName");
   private final @ModelField(targetType="ID", isRequired = true) String id;
   private final @ModelField(targetType="String", isRequired = true) String title;
   private final @ModelField(targetType="String") String description;
   private final @ModelField(targetType="AWSDateTime") Temporal.DateTime dateCreated;
   private final @ModelField(targetType="taskState") TaskState state;
+  private final @ModelField(targetType="Team") @BelongsTo(targetName = "teamTasksId", type = Team.class) Team team;
+  private final @ModelField(targetType="String") String teamName;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime createdAt;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime updatedAt;
   /** @deprecated This API is internal to Amplify and should not be used. */
@@ -64,6 +68,14 @@ public final class TaskModel implements Model {
       return state;
   }
   
+  public Team getTeam() {
+      return team;
+  }
+  
+  public String getTeamName() {
+      return teamName;
+  }
+  
   public Temporal.DateTime getCreatedAt() {
       return createdAt;
   }
@@ -72,12 +84,14 @@ public final class TaskModel implements Model {
       return updatedAt;
   }
   
-  private TaskModel(String id, String title, String description, Temporal.DateTime dateCreated, TaskState state) {
+  private TaskModel(String id, String title, String description, Temporal.DateTime dateCreated, TaskState state, Team team, String teamName) {
     this.id = id;
     this.title = title;
     this.description = description;
     this.dateCreated = dateCreated;
     this.state = state;
+    this.team = team;
+    this.teamName = teamName;
   }
   
   @Override
@@ -93,6 +107,8 @@ public final class TaskModel implements Model {
               ObjectsCompat.equals(getDescription(), taskModel.getDescription()) &&
               ObjectsCompat.equals(getDateCreated(), taskModel.getDateCreated()) &&
               ObjectsCompat.equals(getState(), taskModel.getState()) &&
+              ObjectsCompat.equals(getTeam(), taskModel.getTeam()) &&
+              ObjectsCompat.equals(getTeamName(), taskModel.getTeamName()) &&
               ObjectsCompat.equals(getCreatedAt(), taskModel.getCreatedAt()) &&
               ObjectsCompat.equals(getUpdatedAt(), taskModel.getUpdatedAt());
       }
@@ -106,6 +122,8 @@ public final class TaskModel implements Model {
       .append(getDescription())
       .append(getDateCreated())
       .append(getState())
+      .append(getTeam())
+      .append(getTeamName())
       .append(getCreatedAt())
       .append(getUpdatedAt())
       .toString()
@@ -121,6 +139,8 @@ public final class TaskModel implements Model {
       .append("description=" + String.valueOf(getDescription()) + ", ")
       .append("dateCreated=" + String.valueOf(getDateCreated()) + ", ")
       .append("state=" + String.valueOf(getState()) + ", ")
+      .append("team=" + String.valueOf(getTeam()) + ", ")
+      .append("teamName=" + String.valueOf(getTeamName()) + ", ")
       .append("createdAt=" + String.valueOf(getCreatedAt()) + ", ")
       .append("updatedAt=" + String.valueOf(getUpdatedAt()))
       .append("}")
@@ -145,6 +165,8 @@ public final class TaskModel implements Model {
       null,
       null,
       null,
+      null,
+      null,
       null
     );
   }
@@ -154,7 +176,9 @@ public final class TaskModel implements Model {
       title,
       description,
       dateCreated,
-      state);
+      state,
+      team,
+      teamName);
   }
   public interface TitleStep {
     BuildStep title(String title);
@@ -167,6 +191,8 @@ public final class TaskModel implements Model {
     BuildStep description(String description);
     BuildStep dateCreated(Temporal.DateTime dateCreated);
     BuildStep state(TaskState state);
+    BuildStep team(Team team);
+    BuildStep teamName(String teamName);
   }
   
 
@@ -176,16 +202,20 @@ public final class TaskModel implements Model {
     private String description;
     private Temporal.DateTime dateCreated;
     private TaskState state;
+    private Team team;
+    private String teamName;
     public Builder() {
       
     }
     
-    private Builder(String id, String title, String description, Temporal.DateTime dateCreated, TaskState state) {
+    private Builder(String id, String title, String description, Temporal.DateTime dateCreated, TaskState state, Team team, String teamName) {
       this.id = id;
       this.title = title;
       this.description = description;
       this.dateCreated = dateCreated;
       this.state = state;
+      this.team = team;
+      this.teamName = teamName;
     }
     
     @Override
@@ -197,7 +227,9 @@ public final class TaskModel implements Model {
           title,
           description,
           dateCreated,
-          state);
+          state,
+          team,
+          teamName);
     }
     
     @Override
@@ -225,6 +257,18 @@ public final class TaskModel implements Model {
         return this;
     }
     
+    @Override
+     public BuildStep team(Team team) {
+        this.team = team;
+        return this;
+    }
+    
+    @Override
+     public BuildStep teamName(String teamName) {
+        this.teamName = teamName;
+        return this;
+    }
+    
     /**
      * @param id id
      * @return Current Builder instance, for fluent method chaining
@@ -237,8 +281,8 @@ public final class TaskModel implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, String title, String description, Temporal.DateTime dateCreated, TaskState state) {
-      super(id, title, description, dateCreated, state);
+    private CopyOfBuilder(String id, String title, String description, Temporal.DateTime dateCreated, TaskState state, Team team, String teamName) {
+      super(id, title, description, dateCreated, state, team, teamName);
       Objects.requireNonNull(title);
     }
     
@@ -261,14 +305,15 @@ public final class TaskModel implements Model {
      public CopyOfBuilder state(TaskState state) {
       return (CopyOfBuilder) super.state(state);
     }
-  }
-  
-
-  public static class TaskModelIdentifier extends ModelIdentifier<TaskModel> {
-    private static final long serialVersionUID = 1L;
-    public TaskModelIdentifier(String id) {
-      super(id);
+    
+    @Override
+     public CopyOfBuilder team(Team team) {
+      return (CopyOfBuilder) super.team(team);
+    }
+    
+    @Override
+     public CopyOfBuilder teamName(String teamName) {
+      return (CopyOfBuilder) super.teamName(teamName);
     }
   }
-  
 }
