@@ -19,4 +19,5 @@
     <string name="description">Description</string>
     <string name="delete">Delete</string>
     <string name="task_state">Task State</string>
+    <string name="cancel">Cancel</string>
 </resources>
