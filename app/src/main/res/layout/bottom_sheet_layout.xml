@@ -59,6 +59,11 @@
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp" />
 
+        <Spinner
+            android:id="@+id/bottomSheetSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -90,5 +95,6 @@
                 android:padding="8dp"
                 style="?android:attr/buttonBarButtonStyle" />
         </LinearLayout>
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

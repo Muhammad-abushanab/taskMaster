@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +18,7 @@ import com.amplifyframework.api.graphql.model.ModelMutation;
 import com.amplifyframework.api.graphql.model.ModelQuery;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.generated.model.TaskModel;
+import com.amplifyframework.datastore.generated.model.TaskState;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.shanab.taskmaster.database.TaskDatabase;
 import com.shanab.taskmaster.R;
@@ -105,9 +108,16 @@ public class TaskDetails extends AppCompatActivity {
     private void showBottomDialog() {
         final BottomSheetDialog sheetDialog = new BottomSheetDialog(this);
         sheetDialog.setContentView(R.layout.bottom_sheet_layout);
+        Spinner bottomSheetSpinner = sheetDialog.findViewById(R.id.bottomSheetSpinner);
+        bottomSheetSpinner.setAdapter(new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                TaskState.values()
+        ));
         Button cancel = sheetDialog.findViewById(R.id.cancelBtn);
         Button save = sheetDialog.findViewById(R.id.saveBtnBottomSheet);
         sheetDialog.show();
+        assert cancel != null;
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,13 +126,14 @@ public class TaskDetails extends AppCompatActivity {
         });
         Toast toast = Toast.makeText(this, "Updated", Toast.LENGTH_SHORT);
         Intent navigateToMainActivity = new Intent(this, MainActivity.class);
+        assert save != null;
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String title = ((TextView) Objects.requireNonNull(sheetDialog.findViewById(R.id.titleEditBottomSheet))).getText().toString();
                 String description = ((TextView) Objects.requireNonNull(sheetDialog.findViewById(R.id.descriptionEditBottomSheet))).getText().toString();
 
-                Amplify.API.mutate(ModelMutation.update(task.copyOfBuilder().title(title).description(description).build()),
+                Amplify.API.mutate(ModelMutation.update(task.copyOfBuilder().title(title).description(description).state((TaskState) bottomSheetSpinner.getSelectedItem()).build()),
                         response ->
                         {
                             Log.i("MyAmplifyApp", "Todo with id: " + response.getData().getId());

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.amplifyframework.api.graphql.model.ModelMutation;
 import com.amplifyframework.api.graphql.model.ModelQuery;
+import com.amplifyframework.auth.AuthUser;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.core.model.temporal.Temporal;
 import com.amplifyframework.datastore.generated.model.TaskModel;
@@ -33,12 +34,18 @@ public class MainActivity extends AppCompatActivity {
     TaskAdapter adapter;
     TaskDatabase taskDatabase;
     String teamName = null;
+    AuthUser authUser = Amplify.Auth.getCurrentUser();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
+
+        if (authUser == null) {
+            Intent goToLoginPage = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(goToLoginPage);
+        }
         settingNavigationButtons();
 //        createTeams();
     }
@@ -78,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String userNickname = preferences.getString(SettingsActivity.USER_NICKNAME_TAG, "No nickname");
         String userTeam = preferences.getString(SettingsActivity.USER_TEAM_TAG, "No Team");
-        ((TextView) findViewById(R.id.homeHeader)).setText(getString(R.string.nick_name, userNickname));
+        ((TextView) findViewById(R.id.homeHeader)).setText(getString(R.string.nick_name, authUser.getUsername()));
         ((TextView) findViewById(R.id.teamNameInMain)).setText(getString(R.string.team_name, userTeam));
         teamName = ((TextView) findViewById(R.id.teamNameInMain)).getText().toString();
         setUpTaskRecyclerView();
