@@ -11,9 +11,8 @@
         android:id="@+id/TaskDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="608dp"
+        android:layout_marginBottom="460dp"
         android:padding="10dp"
-        android:text="@string/lorem_ipsum_dolor_sit_amet_consectetur_adipiscing_elit_vivamus_porta_tortor_ac_tincidunt_pulvinar_massa_odio_rutrum_ante_non_laoreet_diam_magna_eget_neque_in_ut_ante_id_tellus_aliquam_elementum_eu_non_risus"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,43 +34,47 @@
         android:id="@+id/deleteTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="520dp"
+        android:layout_marginBottom="224dp"
         android:backgroundTint="@color/red"
         android:text="@string/delete"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.049"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TaskDescription"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintHorizontal_bias="0.04"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/TaskState"
-        android:textSize="24sp"
-        android:textColor="#3876BF"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/task_state"
+        android:textColor="#3876BF"
+        android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/TaskDescription"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.045"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar3" />
 
+    <ImageView
+        android:id="@+id/imageViewTaskDetails"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@+id/deleteTask"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TaskDescription" />
+
     <Button
         android:id="@+id/editBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="187dp"
-        android:layout_marginTop="32dp"
         android:layout_marginEnd="28dp"
-        android:layout_marginBottom="507dp"
+        android:layout_marginBottom="224dp"
         android:text="Edit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/deleteTask"
-        app:layout_constraintTop_toBottomOf="@+id/TaskDescription"
-        app:layout_constraintVertical_bias="0.38" />
+        app:layout_constraintStart_toEndOf="@+id/deleteTask" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

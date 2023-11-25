@@ -2,6 +2,7 @@ package com.amplifyframework.datastore.generated.model;
 
 import com.amplifyframework.core.model.temporal.Temporal;
 import com.amplifyframework.core.model.annotations.HasMany;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.Objects;
@@ -213,7 +214,6 @@ public final class Team implements Model {
     }
   }
   
-
 
   
 }
