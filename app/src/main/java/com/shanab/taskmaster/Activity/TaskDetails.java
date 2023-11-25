@@ -4,12 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +26,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.shanab.taskmaster.database.TaskDatabase;
 import com.shanab.taskmaster.R;
 
+import java.io.File;
 import java.util.Objects;
 
 public class TaskDetails extends AppCompatActivity {
@@ -100,6 +104,23 @@ public class TaskDetails extends AppCompatActivity {
                     TextView state = findViewById(R.id.TaskState);
                     description.setText(task.getDescription());
                     state.setText(task.getState().toString());
+                    String key = task.getTaskImageS3Key();
+                    Log.d("KeyForMe", "run() returned: " + key);
+                    if (key != null) {
+                        ImageView image = findViewById(R.id.imageViewTaskDetails);
+                        Amplify.Storage.downloadFile(
+                                key,
+                                new File(getApplicationContext().getFilesDir(), "downloaded_image.jpg"),
+                                result -> {
+                                    Log.i("MyAmplifyApp", "Successfully downloaded: " + result.getFile().getPath());
+                                    runOnUiThread(() -> {
+                                        Bitmap bitmap = BitmapFactory.decodeFile(result.getFile().getPath());
+                                        image.setImageBitmap(bitmap);
+                                    });
+                                },
+                                error -> Log.e("MyAmplifyApp", "Download failed", error)
+                        );
+                    }
                 }
             }
         });

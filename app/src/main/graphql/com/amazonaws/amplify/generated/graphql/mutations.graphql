@@ -10,6 +10,7 @@ mutation CreateTaskModel(
     description
     dateCreated
     state
+    taskImageS3Key
     team {
       id
       name
@@ -36,6 +37,7 @@ mutation UpdateTaskModel(
     description
     dateCreated
     state
+    taskImageS3Key
     team {
       id
       name
@@ -62,6 +64,7 @@ mutation DeleteTaskModel(
     description
     dateCreated
     state
+    taskImageS3Key
     team {
       id
       name

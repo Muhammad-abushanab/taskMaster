@@ -1,16 +1,24 @@
 package com.shanab.taskmaster.Activity;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.room.Room;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -24,6 +32,7 @@ import com.amplifyframework.datastore.generated.model.Team;
 import com.shanab.taskmaster.database.TaskDatabase;
 import com.shanab.taskmaster.R;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +46,9 @@ public class Add_A_Task extends AppCompatActivity {
     Spinner taskStateSpinner = null;
     Spinner teamsSpinner = null;
     public static final String TAG = "AddProductActivity";
+    private ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
+    private ImageView selectedImageView;
+    private String filePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +64,22 @@ public class Add_A_Task extends AppCompatActivity {
                 .build();
         setupSpinners();
         setUpAddTaskBtn();
+        selectedImageView = findViewById(R.id.imageViewTaskDetails);
+        pickMedia = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(),
+                uri -> {
+                    if (uri != null) {
+                        try {
+                            selectedImageView.setImageURI(uri);
+                            filePath = getRealPathFromURI(uri);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.e("PHTACT", "Error setting image URI: " + e.getMessage());
+                        }
+                    } else {
+                        Log.d("PHTACT", "No media selected");
+                        filePath = null;
+                    }
+                });
     }
 
     @Override
@@ -104,7 +132,7 @@ public class Add_A_Task extends AppCompatActivity {
                     Log.i(TAG, "Read Team Successfully");
                     ArrayList<String> teamName = new ArrayList<>();
                     ArrayList<Team> teams = new ArrayList<>();
-                    for(Team team: success.getData()){
+                    for (Team team : success.getData()) {
                         teams.add(team);
                         teamName.add(team.getName());
                         Log.d(TAG, "setupSpinners() returned: " + team.getName());
@@ -119,31 +147,72 @@ public class Add_A_Task extends AppCompatActivity {
                         ));
                     });
                 },
-                failure-> {
+                failure -> {
                     teamFuture.complete(null);
                     Log.i(TAG, "Did not read contacts successfully");
                 }
         );
     }
-    private void setUpAddTaskBtn(){
+
+    private void setUpAddTaskBtn() {
         Button addTaskActivityBtn = (Button) findViewById(R.id.AddTaskBtn);
-        Toast toast = Toast.makeText(this, "Task Added Successfully", Toast.LENGTH_SHORT);
-        Intent navigateToMainActivity = new Intent(this, MainActivity.class);
-
-
-        List<Team> teams=null;
+        List<Team> teams = null;
 
         try {
-            teams=teamFuture.get();
+            teams = teamFuture.get();
             Log.d(TAG, "setUpAddTaskBtn() returned: " + teams.toString());
-        }catch (InterruptedException ie){
+        } catch (InterruptedException ie) {
             Log.e(TAG, " InterruptedException while getting contacts");
-        }catch (ExecutionException ee){
-            Log.e(TAG," ExecutionException while getting contacts");
+        } catch (ExecutionException ee) {
+            Log.e(TAG, " ExecutionException while getting contacts");
         }
         assert teams != null;
         List<Team> finalTeams = teams;
         addTaskActivityBtn.setOnClickListener(view -> {
+            handleFileSelection(finalTeams);
+        });
+
+
+    }
+    private void handleFileSelection(List<Team> finalTeams){
+        Intent navigateToMainActivity = new Intent(this, MainActivity.class);
+        Toast toast = Toast.makeText(this, "Task Added Successfully", Toast.LENGTH_SHORT);
+        if (filePath != null && !filePath.isEmpty()) {
+            File imageFile = new File(filePath);
+            String key = "images/" + imageFile.getName();
+            String title = ((EditText) findViewById(R.id.tasktitle)).getText().toString();
+            String description = ((EditText) findViewById(R.id.taskDescription)).getText().toString();
+            Team selectedTeam = finalTeams.stream().filter(t -> t.getName().equals(teamsSpinner.getSelectedItem().toString())).findAny().orElseThrow(RuntimeException::new);
+            TaskModel newTask = TaskModel.builder()
+                    .title(title)
+                    .description(description)
+                    .dateCreated(new Temporal.DateTime(new Date(), 0))
+                    .state((com.amplifyframework.datastore.generated.model.TaskState) taskStateSpinner.getSelectedItem())
+                    .team(selectedTeam)
+                    .taskImageS3Key(key)
+                    .teamName(selectedTeam.getName())
+                    .build();
+            Amplify.Storage.uploadFile(key,
+                    imageFile,
+                    result -> {
+                        Log.i("MyAmplifyApp", "Successfully uploaded: " + result.getKey());
+                    },
+                    error -> {
+                        Log.e("MyAmplifyApp", "Upload failed", error);
+                    });
+            Amplify.API.mutate(
+                    ModelMutation.create(newTask),
+                    successResponse -> {
+                        Log.i(TAG, "Task saved successfully");
+                        toast.show();
+                        startActivity(navigateToMainActivity);
+                    },
+                    failureResponse -> {
+                        Log.e(TAG, "Failed to save task: " + failureResponse.toString());
+                        toast.show();
+                    }
+            );
+        } else {
             String title = ((EditText) findViewById(R.id.tasktitle)).getText().toString();
             String description = ((EditText) findViewById(R.id.taskDescription)).getText().toString();
             Team selectedTeam = finalTeams.stream().filter(t -> t.getName().equals(teamsSpinner.getSelectedItem().toString())).findAny().orElseThrow(RuntimeException::new);
@@ -167,6 +236,31 @@ public class Add_A_Task extends AppCompatActivity {
                         toast.show();
                     }
             );
-        });
+        }
     }
+    public void onAddImageButtonClicked(View view) {
+        if (pickMedia != null) {
+            pickMedia.launch(new PickVisualMediaRequest.Builder()
+                    .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                    .build());
+        } else {
+            Log.e("PhotoPicker", "pickMedia is null");
+        }
+    }
+
+    private String getRealPathFromURI(Uri contentUri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(contentUri, projection, null, null, null);
+        if (cursor == null) {
+            return null;
+        } else {
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(projection[0]);
+            String filePath = cursor.getString(columnIndex);
+            cursor.close();
+            return filePath;
+        }
+    }
+
+
 }
