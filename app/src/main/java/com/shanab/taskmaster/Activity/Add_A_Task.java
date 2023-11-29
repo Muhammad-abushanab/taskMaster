@@ -33,6 +33,10 @@ import com.shanab.taskmaster.database.TaskDatabase;
 import com.shanab.taskmaster.R;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,7 +49,7 @@ public class Add_A_Task extends AppCompatActivity {
     CompletableFuture<List<Team>> teamFuture = new CompletableFuture<>();
     Spinner taskStateSpinner = null;
     Spinner teamsSpinner = null;
-    public static final String TAG = "AddProductActivity";
+    public static final String TAG = "addTask";
     private ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
     private ImageView selectedImageView;
     private String filePath;
@@ -64,7 +68,15 @@ public class Add_A_Task extends AppCompatActivity {
                 .build();
         setupSpinners();
         setUpAddTaskBtn();
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
         selectedImageView = findViewById(R.id.imageViewTaskDetails);
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if (type.startsWith("image/")) {
+                handleSharedImage(intent);
+            }
+        }
         pickMedia = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(),
                 uri -> {
                     if (uri != null) {
@@ -80,6 +92,18 @@ public class Add_A_Task extends AppCompatActivity {
                         filePath = null;
                     }
                 });
+    }
+
+    private void handleSharedImage(Intent intent) {
+        Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        Log.i(TAG, "imageUri is" + imageUri);
+        if (imageUri != null) {
+            selectedImageView.setImageURI(imageUri);
+            filePath = getFilePathFromUri(imageUri);
+            Log.i(TAG, "handleSharedImage: inside the if condition");
+            Log.i(TAG, "filepath is " + filePath);
+        }
+        else filePath = null;
     }
 
     @Override
@@ -175,6 +199,7 @@ public class Add_A_Task extends AppCompatActivity {
 
     }
     private void handleFileSelection(List<Team> finalTeams){
+        Log.i(TAG, "FilePath is :" + filePath);
         Intent navigateToMainActivity = new Intent(this, MainActivity.class);
         Toast toast = Toast.makeText(this, "Task Added Successfully", Toast.LENGTH_SHORT);
         if (filePath != null && !filePath.isEmpty()) {
@@ -260,6 +285,40 @@ public class Add_A_Task extends AppCompatActivity {
             cursor.close();
             return filePath;
         }
+    }
+    private String getFilePathFromUri(Uri uri) {
+        String filePath = null;
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            if (inputStream != null) {
+                File tempFile = createTempFile();
+                if (tempFile != null) {
+                    OutputStream outputStream = new FileOutputStream(tempFile);
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, bytesRead);
+                    }
+                    filePath = tempFile.getAbsolutePath();
+                    outputStream.close();
+                    inputStream.close();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return filePath;
+    }
+
+    private File createTempFile() {
+        String fileName = "temp_image";
+        File tempDir = getApplicationContext().getCacheDir();
+        try {
+            return File.createTempFile(fileName, null, tempDir);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
