@@ -8,6 +8,8 @@ query GetTaskModel($id: ID!) {
     dateCreated
     state
     taskImageS3Key
+    taskLatitude
+    taskLongitude
     team {
       id
       name
@@ -37,6 +39,8 @@ query ListTaskModels(
       dateCreated
       state
       taskImageS3Key
+      taskLatitude
+      taskLongitude
       teamName
       createdAt
       updatedAt

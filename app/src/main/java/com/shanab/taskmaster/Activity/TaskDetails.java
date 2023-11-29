@@ -121,6 +121,11 @@ public class TaskDetails extends AppCompatActivity {
                                 error -> Log.e("MyAmplifyApp", "Download failed", error)
                         );
                     }
+                    if (task.getTaskLatitude() != null && task.getTaskLongitude() != null) {
+                        TextView locationTextView = findViewById(R.id.locationTextView);
+                        String location = "Latitude: " + task.getTaskLatitude() + "\nLongitude: " + task.getTaskLongitude();
+                        locationTextView.setText(location);
+                    }
                 }
             }
         });
