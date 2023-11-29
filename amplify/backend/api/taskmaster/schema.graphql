@@ -9,6 +9,8 @@ type TaskModel @model @auth(rules: [{allow: public}]){
   dateCreated: AWSDateTime
   state: taskState
   taskImageS3Key: String
+  taskLatitude: String
+  taskLongitude : String
   team : Team @belongsTo
   teamName : String
 }
