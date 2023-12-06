@@ -1,4 +1,11 @@
 export type AmplifyDependentResourcesAttributes = {
+  "analytics": {
+    "taskmaster": {
+      "Id": "string",
+      "Region": "string",
+      "appName": "string"
+    }
+  },
   "api": {
     "taskmaster": {
       "GraphQLAPIEndpointOutput": "string",
@@ -15,6 +22,13 @@ export type AmplifyDependentResourcesAttributes = {
       "UserPoolArn": "string",
       "UserPoolId": "string",
       "UserPoolName": "string"
+    }
+  },
+  "predictions": {
+    "translateTextTaskMaster": {
+      "region": "string",
+      "sourceLang": "string",
+      "targetLang": "string"
     }
   },
   "storage": {
