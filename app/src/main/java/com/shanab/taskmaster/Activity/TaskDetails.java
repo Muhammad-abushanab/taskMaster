@@ -6,7 +6,9 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,17 +24,26 @@ import com.amplifyframework.api.graphql.model.ModelQuery;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.generated.model.TaskModel;
 import com.amplifyframework.datastore.generated.model.TaskState;
+import com.amplifyframework.predictions.models.LanguageType;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.shanab.taskmaster.database.TaskDatabase;
 import com.shanab.taskmaster.R;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Locale;
 import java.util.Objects;
 
 public class TaskDetails extends AppCompatActivity {
     public static final String TASK_NAME_TAG = "Task Title";
     private TaskModel task;
     private TaskDatabase taskDatabase;
+    private final MediaPlayer mp = new MediaPlayer();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +71,18 @@ public class TaskDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showBottomDialog();
+            }
+        });
+        findViewById(R.id.translateBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                translate();
+            }
+        });
+        findViewById(R.id.ReadBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                readTaskDescription();
             }
         });
     }
@@ -93,7 +116,53 @@ public class TaskDetails extends AppCompatActivity {
                 error -> Log.e("MyAmplifyApp", error.toString(), error)
         );
     }
+    private void readTaskDescription() {
+        if (task != null) {
+            String description = task.getDescription();
 
+
+            Amplify.Predictions.convertTextToSpeech(
+                    description,
+                    result -> {
+                        Log.i("ReadDescription", "readTaskDescription: ");
+                        playAudio(result.getAudioData());
+                    },
+                    error -> Log.e("ReadDescription", "Text-to-Speech failed", error)
+            );
+        }
+    }
+    private void playAudio(InputStream data) {
+        File mp3File = new File(getCacheDir(), "audio.mp3");
+
+        try (OutputStream out = new FileOutputStream(mp3File)) {
+            byte[] buffer = new byte[8 * 1_024];
+            int bytesRead;
+            while ((bytesRead = data.read(buffer)) != -1) {
+                out.write(buffer, 0, bytesRead);
+            }
+            mp.reset();
+            mp.setOnPreparedListener(MediaPlayer::start);
+            mp.setDataSource(new FileInputStream(mp3File).getFD());
+            mp.prepareAsync();
+        } catch (IOException error) {
+            Log.e("MyAmplifyApp", "Error writing audio file", error);
+        }
+    }
+    private void translate() {
+        TextView description = findViewById(R.id.TaskDescription);
+        Amplify.Predictions.translateText(
+                task.getDescription(),
+                LanguageType.ENGLISH,
+                LanguageType.GERMAN,
+                result -> {
+                    Log.i("Translate", "translate: " + result.getTranslatedText());
+                    runOnUiThread(() -> {
+                        description.setText(result.getTranslatedText());
+                    });
+                },
+                error -> Log.e("MyAmplifyApp", "Translation failed", error)
+        );
+    }
     private void updateUI() {
         runOnUiThread(new Runnable() {
             @Override

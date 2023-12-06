@@ -1,4 +1,10 @@
 {
+  "analytics": {
+    "taskmaster": {
+      "providerPlugin": "awscloudformation",
+      "service": "Pinpoint"
+    }
+  },
   "api": {
     "taskmaster": {
       "dependsOn": [],
@@ -43,6 +49,13 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
+    }
+  },
+  "predictions": {
+    "translateTextTaskMaster": {
+      "convertType": "translateText",
+      "providerPlugin": "awscloudformation",
+      "service": "Translate"
     }
   },
   "storage": {

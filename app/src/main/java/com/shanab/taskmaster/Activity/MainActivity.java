@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.amplifyframework.analytics.AnalyticsEvent;
 import com.amplifyframework.api.graphql.model.ModelMutation;
 import com.amplifyframework.api.graphql.model.ModelQuery;
 import com.amplifyframework.auth.AuthUser;
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         taskListRecyclerView.setLayoutManager(layoutManager);
         List<TaskModel> tasks = new ArrayList<>();
-
+        recordAnalyticsEvent();
         Log.i("SHANAB", "setUpTaskRecyclerView: " + teamName);
         Amplify.API.query(
                 ModelQuery.list(TaskModel.class,TaskModel.TEAM_NAME.eq(teamName)),
@@ -142,7 +143,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    private void recordAnalyticsEvent() {
+        AnalyticsEvent event = AnalyticsEvent.builder()
+                .name("MainActivityOpened")
+                .addProperty("TeamName", teamName)
+                .build();
 
+        Amplify.Analytics.recordEvent(event);
+    }
     private void createTeams() {
         Team t1 = Team.builder().name("Innovation Avengers").dateCreated(new Temporal.DateTime(new Date(), 0)).build();
         Team t2 = Team.builder().name("Code Crusaders").dateCreated(new Temporal.DateTime(new Date(), 0)).build();
